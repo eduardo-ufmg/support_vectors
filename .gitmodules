@@ -1,0 +1,9 @@
+[submodule "relative_neighborhood_graph"]
+	path = relative_neighborhood_graph
+	url = https://github.com/eduardo-ufmg/relative_neighborhood_graph
+[submodule "gabriel_graph"]
+	path = gabriel_graph
+	url = https://github.com/eduardo-ufmg/gabriel_graph
+[submodule "urquhart_graph"]
+	path = urquhart_graph
+	url = https://github.com/eduardo-ufmg/urquhart_graph
