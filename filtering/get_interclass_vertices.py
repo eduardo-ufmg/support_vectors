@@ -1,6 +1,9 @@
 import numpy as np
 
-def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+
+def get_interclass_vertices(
+    X: np.ndarray, ADJ: np.ndarray, y: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Get the vertices of edges that connect samples from different classes in a graph.
 
@@ -29,7 +32,9 @@ def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tu
     y = np.asarray(y)
 
     n = X.shape[0]
-    degrees = -1 * np.ones(n, dtype=float) # Initialize degrees to -1 to indicate uncalculated
+    degrees = -1 * np.ones(
+        n, dtype=float
+    )  # Initialize degrees to -1 to indicate uncalculated
     vertices = []
     class_labels = []
 
@@ -37,7 +42,7 @@ def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tu
         neighbors = np.where(ADJ[i])[0]
         if len(neighbors) == 0:
             continue
-        
+
         same_class_neighbors = neighbors[y[neighbors] == y[i]]
         different_class_neighbors = neighbors[y[neighbors] != y[i]]
 
