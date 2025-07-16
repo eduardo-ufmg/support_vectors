@@ -33,6 +33,13 @@ def support_vectors(X: ArrayLike, y: ArrayLike,
     -------
     tuple[np.ndarray, np.ndarray]
         The support vectors and their corresponding labels.
+
+    Raises
+    ------
+    ValueError
+        If an unknown graph method or filter method is provided;
+        If the one-step filter criterion is not recognized;
+        If the support vectors do not cover all classes in the original data.
     """
 
     method_dict = {
@@ -60,16 +67,17 @@ def support_vectors(X: ArrayLike, y: ArrayLike,
         ADJfiltered = build_graph(Xfiltered)
 
         Xsupport, ysupport, _ = get_interclass_vertices(Xfiltered, ADJfiltered, yfiltered)
-
-        return Xsupport, ysupport
     
     elif filter_method == 'one-pass':
         if one_step_filter_criterion not in ['interclass-average', 'zero']:
             raise ValueError(f"Unknown one-step filter criterion: {one_step_filter_criterion}")
 
-        Xfiltered, yfiltered = filter_by_degree(Xinter, yinter, degreeinter, one_step_filter_criterion)
+        Xsupport, ysupport = filter_by_degree(Xinter, yinter, degreeinter, one_step_filter_criterion)
 
-        return Xfiltered, yfiltered
-    
     else:
         raise ValueError(f"Unknown filter method: {filter_method}")
+
+    if len(np.unique(y)) != len(np.unique(ysupport)):
+        raise ValueError("The support vectors do not cover all classes in the original data.")
+
+    return Xsupport, ysupport
