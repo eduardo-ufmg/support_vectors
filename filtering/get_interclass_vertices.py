@@ -17,7 +17,7 @@ def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tu
     -------
     tuple[np.ndarray, np.ndarray, np.ndarray]
         A tuple containing:
-        - vertices: The indices of the vertices that connect different classes.
+        - vertices: The vertices that connect different classes.
         - class_labels: The labels of the classes corresponding to the vertices.
         - degrees: The degrees of the vertices in the graph.
 
@@ -29,7 +29,7 @@ def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tu
     y = np.asarray(y)
 
     n = X.shape[0]
-    degrees = np.zeros(n, dtype=float)
+    degrees = -1 * np.ones(n, dtype=float) # Initialize degrees to -1 to indicate uncalculated
     vertices = []
     class_labels = []
 
@@ -42,8 +42,10 @@ def get_interclass_vertices(X: np.ndarray, ADJ: np.ndarray, y: np.ndarray) -> tu
         different_class_neighbors = neighbors[y[neighbors] != y[i]]
 
         if len(different_class_neighbors) > 0:
-            vertices.append(i)
+            vertices.append(X[i])
             class_labels.append(y[i])
             degrees[i] = len(same_class_neighbors) / len(neighbors)
+
+    degrees = degrees[degrees != -1]
 
     return np.array(vertices), np.array(class_labels), degrees
