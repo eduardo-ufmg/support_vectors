@@ -6,8 +6,12 @@ from gabriel_graph.gabriel_graph import gabriel_graph
 from relative_neighborhood_graph.relative_neighborhood_graph import relative_neighborhood_graph
 from urquhart_graph.urquhart_graph import urquhart_graph
 
+from filtering.get_interclass_vertices import get_interclass_vertices
+from filtering.filter_by_degree import filter_by_degree
+
 def support_vectors(X: ArrayLike, y: ArrayLike,
-                    graph_method: str, filter_method: str)-> tuple[np.ndarray, np.ndarray]:
+                    graph_method: str, filter_method: str,
+                    one_step_filter_criterion: str)-> tuple[np.ndarray, np.ndarray]:
     """
     Compute the support vectors based on the specified graph method and filter method.
 
@@ -20,7 +24,10 @@ def support_vectors(X: ArrayLike, y: ArrayLike,
     graph_method : str
         The method to compute the graph ('gabriel', 'relative_neighborhood', or 'urquhart').
     filter_method : str
-        The method to filter the support vectors ('two-step', 'one-step')
+        The method to filter the support vectors ('two-pass', 'one-pass')
+    one_step_filter_criterion : str
+        The criterion for one-step filtering ('interclass-average', or 'zero').
+    
 
     Returns
     -------
@@ -28,5 +35,41 @@ def support_vectors(X: ArrayLike, y: ArrayLike,
         The support vectors and their corresponding labels.
     """
 
-    raise NotImplementedError("This function is not implemented yet.")
+    method_dict = {
+        'gabriel': gabriel_graph,
+        'relative_neighborhood': relative_neighborhood_graph,
+        'urquhart': urquhart_graph
+    }
 
+    if graph_method in method_dict:
+        build_graph = method_dict[graph_method]
+    else:
+        raise ValueError(f"Unknown graph method: {graph_method}")
+    
+    X = np.asarray(X)
+    y = np.asarray(y)
+    
+    ADJ = build_graph(X)
+
+    Xinter, yinter, degreeinter = get_interclass_vertices(X, ADJ, y)
+
+    if filter_method == 'two-pass':
+
+        Xfiltered, yfiltered = filter_by_degree(Xinter, yinter, degreeinter, 'class-average')
+
+        ADJfiltered = build_graph(Xfiltered)
+
+        Xsupport, ysupport, _ = get_interclass_vertices(Xfiltered, ADJfiltered, yfiltered)
+
+        return Xsupport, ysupport
+    
+    elif filter_method == 'one-pass':
+        if one_step_filter_criterion not in ['interclass-average', 'zero']:
+            raise ValueError(f"Unknown one-step filter criterion: {one_step_filter_criterion}")
+
+        Xfiltered, yfiltered = filter_by_degree(Xinter, yinter, degreeinter, one_step_filter_criterion)
+
+        return Xfiltered, yfiltered
+    
+    else:
+        raise ValueError(f"Unknown filter method: {filter_method}")
