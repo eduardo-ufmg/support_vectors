@@ -10,7 +10,8 @@ def filter_by_degree(
     The threshold is determined by the filter criterion:
 
     - 'class-average': Below the average degree of their class.
-    - 'interclass-average': Below the average degree of all interclass edges.
+    - 'interclass-average': Below the average degree of all vertices
+        of the same class that are connected to interclass edges.
     - 'zero': Close to zero.
 
     Parameters
@@ -81,7 +82,8 @@ def interclass_average_filter(
     X: np.ndarray, y: np.ndarray, degrees: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Filter vertices based on the average degree of interclass edges.
+    Drop vertices with degree below the average degree of the vertices
+    of the same class that are connected to interclass edges.
 
     Parameters
     ----------
@@ -97,7 +99,28 @@ def interclass_average_filter(
     tuple[np.ndarray, np.ndarray]
         The filtered data points and their corresponding labels.
     """
-    mask = degrees >= np.mean(degrees)
+    mask = np.zeros(len(X), dtype=bool)
+
+    # Get unique classes
+    unique_classes = np.unique(y)
+
+    # For each class, calculate average degree of vertices connected to interclass edges
+    for class_label in unique_classes:
+        class_mask = y == class_label
+        class_degrees = degrees[class_mask]
+        
+        # Find vertices connected to interclass edges (degree < 1.0)
+        interclass_mask = class_degrees < 1.0
+        
+        if np.any(interclass_mask):
+            # Calculate average degree of vertices with interclass connections
+            interclass_avg_degree = np.mean(class_degrees[interclass_mask])
+            
+            # Keep vertices with degree >= interclass average
+            mask[class_mask] = class_degrees >= interclass_avg_degree
+        else:
+            # If no interclass connections, keep all vertices of this class
+            mask[class_mask] = True
 
     return X[mask], y[mask]
 
