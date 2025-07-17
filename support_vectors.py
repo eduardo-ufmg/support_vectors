@@ -1,11 +1,11 @@
 import numpy as np
+from numpy.typing import ArrayLike
+
 from filtering.filter_by_degree import filter_by_degree
 from filtering.get_interclass_vertices import get_interclass_vertices
 from gabriel_graph.gabriel_graph import gabriel_graph
-from numpy.typing import ArrayLike
-from relative_neighborhood_graph.relative_neighborhood_graph import (
-    relative_neighborhood_graph,
-)
+from relative_neighborhood_graph.relative_neighborhood_graph import \
+    relative_neighborhood_graph
 from urquhart_graph.urquhart_graph import urquhart_graph
 
 
@@ -26,7 +26,8 @@ def support_vectors(
     y : ArrayLike
         The labels corresponding to the data points.
     graph_method : str
-        The method to compute the graph ('gabriel', 'relative_neighborhood', or 'urquhart').
+        The method to compute the graph
+        ('gabriel', 'relative_neighborhood', or 'urquhart').
     filter_method : str
         The method to filter the support vectors ('two-pass', 'one-pass')
     one_step_filter_criterion : str

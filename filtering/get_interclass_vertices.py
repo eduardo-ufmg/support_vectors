@@ -24,7 +24,8 @@ def get_interclass_vertices(
         - class_labels: The labels of the classes corresponding to the vertices.
         - degrees: The degrees of the vertices in the graph.
 
-    The degree of a vertex is defined as the number of same-class edges connected to it divided by the total number of edges connected to it.
+    The degree of a vertex is defined as the number of same-class edges connected to it
+    divided by the total number of edges connected to it.
     """
 
     X = np.asarray(X)

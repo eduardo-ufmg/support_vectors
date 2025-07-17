@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.datasets import make_blobs
 
 from support_vectors import support_vectors
@@ -8,7 +7,8 @@ from support_vectors import support_vectors
 def test_support_vectors():
     """
     Test all combinations of graph methods and support vector selectors.
-    Plot all results in the same figure with the complete set and highlighted support vectors.
+    Plot all results in the same figure with the complete set
+    and highlighted support vectors.
     """
 
     # Generate synthetic data
@@ -46,7 +46,7 @@ def test_support_vectors():
                     title = f"{graph_method.title()}\nOne-Pass ({one_step_criterion})"
 
                 # Plot complete dataset
-                scatter = ax.scatter(X[:, 0], X[:, 1], c=y)
+                _ = ax.scatter(X[:, 0], X[:, 1], c=y)
 
                 # Highlight support vectors
                 if len(X_support) > 0:
@@ -102,7 +102,8 @@ def test_support_vectors():
 
                 reduction_rate = (1 - len(X_support) / len(X)) * 100
                 print(
-                    f"  {method_name:25}: {len(X_support):3d} vectors ({reduction_rate:5.1f}% reduction)"
+                    f"  {method_name:25}: {len(X_support):3d} vectors "
+                    f"({reduction_rate:5.1f}% reduction)"
                 )
 
             except Exception as e:
@@ -122,9 +123,8 @@ def test_individual_methods():
 
     # Test each graph method individually
     from gabriel_graph.gabriel_graph import gabriel_graph
-    from relative_neighborhood_graph.relative_neighborhood_graph import (
-        relative_neighborhood_graph,
-    )
+    from relative_neighborhood_graph.relative_neighborhood_graph import \
+        relative_neighborhood_graph
     from urquhart_graph.urquhart_graph import urquhart_graph
 
     print("\nTesting individual graph methods:")

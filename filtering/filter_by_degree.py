@@ -9,9 +9,9 @@ def filter_by_degree(
 
     The threshold is determined by the filter criterion:
 
-    - 'class-average': Filter vertices with degree below the average degree of their class.
-    - 'interclass-average': Filter vertices with degree below the average degree of all vertices of interclass edges.
-    - 'zero': Filter vertices with degree close to zero.
+    - 'class-average': Below the average degree of their class.
+    - 'interclass-average': Below the average degree of all interclass edges.
+    - 'zero': Close to zero.
 
     Parameters
     ----------
